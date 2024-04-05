@@ -1,6 +1,6 @@
 package main
 
-
+// apa aja
 import (
 	"bufio"
 	"encoding/binary"
