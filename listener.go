@@ -50,7 +50,7 @@ func handleServerConn(client net.Conn, timeout time.Duration) {
 	strMsg := string(bytMsg)
 	fmt.Printf("%s\n", strMsg)
 
-	reply := "Pesan telah diterima"
+	reply := "Message received"
 
 	err = client.SetWriteDeadline(time.Now().Add(timeout))
 	if err != nil {

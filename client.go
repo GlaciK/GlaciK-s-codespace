@@ -1,6 +1,5 @@
 package main
 
-// apa aja
 import (
 	"bufio"
 	"encoding/binary"
@@ -14,38 +13,36 @@ import (
 func menu() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print("1. Kirim pesan ke server\n2. Keluar\n>>")
+		fmt.Print("1.Send msg to server\n2. Keluar\n>>")
 		scanner.Scan()
 		s := scanner.Text()
 		if s == "1" {
-			TulisPesan()
+			WriteMsg()
 		} else if s == "2" {
-			fmt.Println("Terima kasih telah memakai program ini")
+			fmt.Println("Exit")
 			break
 		}
 
 	}
 }
 
-func TulisPesan() {
+func WriteMsg() {
 	scanner := bufio.NewScanner(os.Stdin)
-	var pesan string
+	var msg string
 	for {
-		fmt.Print("masukkan pesan: ")
+		fmt.Print("enter message: ")
 		scanner.Scan()
-		pesan = scanner.Text()
-		if len(pesan) < 1 {
-			fmt.Println("Pesan minimal 1 karakter")
-		} else if strings.Contains(pesan, "kasar") {
-			fmt.Println("pesan tidak boleh mengandung kata kasar")
+		Message = scanner.Text()
+		if len(Message) < 1 {
+			fmt.Println("Message contains minimal 1 character")
 		} else {
 			break
 		}
 	}
-	KirimPesan(pesan)
+	SendMessage(Message)
 }
 
-func KirimPesan(pesan string) {
+func SendMessage(Message string) {
 	serverConn, err := net.DialTimeout("tcp", "127.0.0.1:1234", 3*time.Second)
 	if err != nil {
 		panic(err)
@@ -57,7 +54,7 @@ func KirimPesan(pesan string) {
 		fmt.Println("Error setting write deadline:", err)
 	}
 
-	err = binary.Write(serverConn, binary.LittleEndian, uint32(len(pesan)))
+	err = binary.Write(serverConn, binary.LittleEndian, uint32(len(Message)))
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +64,7 @@ func KirimPesan(pesan string) {
 		fmt.Println("Error setting write deadline:", err)
 	}
 
-	_, err = serverConn.Write([]byte(pesan))
+	_, err = serverConn.Write([]byte(Message))
 	if err != nil {
 		panic(err)
 	}
